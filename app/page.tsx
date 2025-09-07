@@ -6,7 +6,7 @@ export default function Home() {
       <Image
         src="/boxlogo-h.svg"
         alt="Box Logo"
-        className="w-72"
+        className="w-72 dark:invert"
         width={288}
         height={36}
         priority
