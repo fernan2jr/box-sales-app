@@ -26,19 +26,28 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { PhoneInput } from "@/components/ui/phone-input";
 
-const registerFormSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
-  phone: z.string().min(1, { message: "Phone number is required" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
-  confirmPassword: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
-});
+import { IconLockFilled } from "@tabler/icons-react";
 
-export default function RegisterPreview() {
+interface SignupFormProps {
+  signupEnabled?: boolean;
+}
+
+const registerFormSchema = z
+  .object({
+    name: z.string().min(1, { message: "El nombre es requerido" }),
+    email: z.email({ message: "El correo electrónico no es válido" }),
+    phone: z.string().min(1, { message: "El número telefónico es requerido" }),
+    password: z
+      .string()
+      .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });
+
+export default function SignupForm({ signupEnabled = false }: SignupFormProps) {
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -55,8 +64,8 @@ export default function RegisterPreview() {
       // Assuming an async registration function
       console.log(values);
       toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+        <pre className="mt-2 w-[300px] rounded-md bg-muted-foreground p-4">
+          <code>{JSON.stringify(values, null, 2)}</code>
         </pre>,
       );
     } catch (error) {
@@ -175,14 +184,25 @@ export default function RegisterPreview() {
                   )}
                 />
 
-                <Button type="submit" className="mt-4 w-full">
-                  Registrarse
+                <Button
+                  type="submit"
+                  className="mt-4 w-full"
+                  disabled={!signupEnabled}
+                >
+                  {signupEnabled ? (
+                    "Registrarse"
+                  ) : (
+                    <span className="flex items-center justify-center gap-2">
+                      <IconLockFilled className="w-4 h-4" />
+                      Registro Desabilitado
+                    </span>
+                  )}
                 </Button>
               </div>
             </form>
           </Form>
           <div className="mt-4 text-center text-sm">
-            Ya tienes una cuenta?{" "}
+            ¿Ya tienes una cuenta?{" "}
             <Link href="/login" className="underline">
               Iniciar sesión
             </Link>
