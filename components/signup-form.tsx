@@ -36,7 +36,15 @@ const registerFormSchema = z
   .object({
     name: z.string().min(1, { message: "El nombre es requerido" }),
     email: z.email({ message: "El correo electrónico no es válido" }),
-    phone: z.string().min(1, { message: "El número telefónico es requerido" }),
+    username: z
+      .string()
+      .min(3, {
+        message: "El nombre de usuario debe tener al menos 3 caracteres",
+      })
+      .regex(/^[a-z0-9_.]+$/, {
+        message:
+          "Solo puede contener letras minusculas, números, puntos y guiones bajos",
+      }),
     password: z
       .string()
       .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
@@ -53,7 +61,7 @@ export default function SignupForm({ signupEnabled = false }: SignupFormProps) {
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
+      username: "",
       password: "",
       confirmPassword: "",
     },
@@ -95,7 +103,28 @@ export default function SignupForm({ signupEnabled = false }: SignupFormProps) {
                     <FormItem className="grid gap-2">
                       <FormLabel htmlFor="name">Nombre completo</FormLabel>
                       <FormControl>
-                        <Input id="name" placeholder="" {...field} />
+                        <Input id="name" placeholder="Juan Pérez" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Username Field */}
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem className="grid gap-2">
+                      <FormLabel htmlFor="username">
+                        Nombre de usuario
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id="username"
+                          placeholder="juanperez"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -112,29 +141,10 @@ export default function SignupForm({ signupEnabled = false }: SignupFormProps) {
                       <FormControl>
                         <Input
                           id="email"
-                          placeholder="johndoe@mail.com"
+                          placeholder="juanperez@mail.com"
                           type="email"
                           autoComplete="email"
                           {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Phone Field */}
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="phone">Número de teléfono</FormLabel>
-                      <FormControl>
-                        <PhoneInput
-                          {...field}
-                          defaultCountry="DO"
-                          international={false}
                         />
                       </FormControl>
                       <FormMessage />

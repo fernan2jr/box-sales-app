@@ -5,7 +5,7 @@ import SignupForm from "@/components/signup-form";
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-col gap-6 w-full max-w-md items-center justify-center">
+    <div className="flex flex-1 flex-col gap-6 w-full max-w-md items-center justify-center">
       <Image
         src="/boxlogo-h.svg"
         alt="Box Logo"
